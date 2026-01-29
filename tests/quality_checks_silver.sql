@@ -25,7 +25,7 @@ Usage Notes:
 SELECT 
     cst_id,
     COUNT(*) 
-FROM silver.crm_cust_info
+FROM silver.cust_info
 GROUP BY cst_id
 HAVING COUNT(*) > 1 OR cst_id IS NULL;
 
@@ -33,13 +33,13 @@ HAVING COUNT(*) > 1 OR cst_id IS NULL;
 -- Expectation: No Results
 SELECT 
     cst_key 
-FROM silver.crm_cust_info
+FROM silver.cust_info
 WHERE cst_key != TRIM(cst_key);
 
 -- Data Standardization & Consistency
 SELECT DISTINCT 
     cst_marital_status 
-FROM silver.crm_cust_info;
+FROM silver.cust_info;
 
 -- ====================================================================
 -- Checking 'silver.crm_prd_info'
@@ -49,7 +49,7 @@ FROM silver.crm_cust_info;
 SELECT 
     prd_id,
     COUNT(*) 
-FROM silver.crm_prd_info
+FROM silver.prd_info
 GROUP BY prd_id
 HAVING COUNT(*) > 1 OR prd_id IS NULL;
 
@@ -57,36 +57,36 @@ HAVING COUNT(*) > 1 OR prd_id IS NULL;
 -- Expectation: No Results
 SELECT 
     prd_nm 
-FROM silver.crm_prd_info
+FROM silver.prd_info
 WHERE prd_nm != TRIM(prd_nm);
 
 -- Check for NULLs or Negative Values in Cost
 -- Expectation: No Results
 SELECT 
     prd_cost 
-FROM silver.crm_prd_info
+FROM silver.prd_info
 WHERE prd_cost < 0 OR prd_cost IS NULL;
 
 -- Data Standardization & Consistency
 SELECT DISTINCT 
     prd_line 
-FROM silver.crm_prd_info;
+FROM silver.prd_info;
 
 -- Check for Invalid Date Orders (Start Date > End Date)
 -- Expectation: No Results
 SELECT 
     * 
-FROM silver.crm_prd_info
+FROM silver.prd_info
 WHERE prd_end_dt < prd_start_dt;
 
 -- ====================================================================
--- Checking 'silver.crm_sales_details'
+-- Checking 'silver.sales_details'
 -- ====================================================================
 -- Check for Invalid Dates
 -- Expectation: No Invalid Dates
 SELECT 
     NULLIF(sls_due_dt, 0) AS sls_due_dt 
-FROM bronze.crm_sales_details
+FROM bronze.sales_details
 WHERE sls_due_dt <= 0 
     OR LEN(sls_due_dt) != 8 
     OR sls_due_dt > 20500101 
@@ -96,7 +96,7 @@ WHERE sls_due_dt <= 0
 -- Expectation: No Results
 SELECT 
     * 
-FROM silver.crm_sales_details
+FROM silver.sales_details
 WHERE sls_order_dt > sls_ship_dt 
    OR sls_order_dt > sls_due_dt;
 
@@ -106,7 +106,7 @@ SELECT DISTINCT
     sls_sales,
     sls_quantity,
     sls_price 
-FROM silver.crm_sales_details
+FROM silver.sales_details
 WHERE sls_sales != sls_quantity * sls_price
    OR sls_sales IS NULL 
    OR sls_quantity IS NULL 
@@ -130,7 +130,7 @@ WHERE bdate < '1924-01-01'
 -- Data Standardization & Consistency
 SELECT DISTINCT 
     gen 
-FROM silver.erp_cust_az12;
+FROM silver.cust_az12;
 
 -- ====================================================================
 -- Checking 'silver.erp_loc_a101'
@@ -138,7 +138,7 @@ FROM silver.erp_cust_az12;
 -- Data Standardization & Consistency
 SELECT DISTINCT 
     cntry 
-FROM silver.erp_loc_a101
+FROM silver.LOC_A101
 ORDER BY cntry;
 
 -- ====================================================================
@@ -148,7 +148,7 @@ ORDER BY cntry;
 -- Expectation: No Results
 SELECT 
     * 
-FROM silver.erp_px_cat_g1v2
+FROM silver.erp_PX_CAT_G1V2
 WHERE cat != TRIM(cat) 
    OR subcat != TRIM(subcat) 
    OR maintenance != TRIM(maintenance);
@@ -156,4 +156,4 @@ WHERE cat != TRIM(cat)
 -- Data Standardization & Consistency
 SELECT DISTINCT 
     maintenance 
-FROM silver.erp_px_cat_g1v2;
+FROM silver.PX_CAT_G1V2;
