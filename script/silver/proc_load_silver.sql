@@ -33,10 +33,10 @@ BEGIN
 
 		-- Loading silver.crm_cust_info
         SET @start_time = GETDATE();
-		PRINT '>> Truncating Table: silver.crm_cust_info';
+		PRINT '>> Truncating Table: silver.cust_info';
 		TRUNCATE TABLE silver.crm_cust_info;
-		PRINT '>> Inserting Data Into: silver.crm_cust_info';
-		INSERT INTO silver.crm_cust_info (
+		PRINT '>> Inserting Data Into: silver.cust_info';
+		INSERT INTO silver.cust_info (
 			cst_id, 
 			cst_key, 
 			cst_firstname, 
@@ -75,10 +75,10 @@ BEGIN
 
 		-- Loading silver.crm_prd_info
         SET @start_time = GETDATE();
-		PRINT '>> Truncating Table: silver.crm_prd_info';
+		PRINT '>> Truncating Table: silver.prd_info';
 		TRUNCATE TABLE silver.crm_prd_info;
-		PRINT '>> Inserting Data Into: silver.crm_prd_info';
-		INSERT INTO silver.crm_prd_info (
+		PRINT '>> Inserting Data Into: silver.prd_info';
+		INSERT INTO silver.prd_info (
 			prd_id,
 			cat_id,
 			prd_key,
@@ -116,7 +116,7 @@ BEGIN
 		PRINT '>> Truncating Table: silver.crm_sales_details';
 		TRUNCATE TABLE silver.crm_sales_details;
 		PRINT '>> Inserting Data Into: silver.crm_sales_details';
-		INSERT INTO silver.crm_sales_details (
+		INSERT INTO silver.sales_details (
 			sls_ord_num,
 			sls_prd_key,
 			sls_cust_id,
@@ -154,7 +154,7 @@ BEGIN
 					THEN sls_sales / NULLIF(sls_quantity, 0)
 				ELSE sls_price  -- Derive price if original value is invalid
 			END AS sls_price
-		FROM bronze.crm_sales_details;
+		FROM bronze.sales_details;
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
@@ -162,9 +162,9 @@ BEGIN
         -- Loading erp_cust_az12
         SET @start_time = GETDATE();
 		PRINT '>> Truncating Table: silver.erp_cust_az12';
-		TRUNCATE TABLE silver.erp_cust_az12;
+		TRUNCATE TABLE silver.CUST_AZ12;
 		PRINT '>> Inserting Data Into: silver.erp_cust_az12';
-		INSERT INTO silver.erp_cust_az12 (
+		INSERT INTO silver.CUST_AZ12 (
 			cid,
 			bdate,
 			gen
@@ -183,7 +183,7 @@ BEGIN
 				WHEN UPPER(TRIM(gen)) IN ('M', 'MALE') THEN 'Male'
 				ELSE 'n/a'
 			END AS gen -- Normalize gender values and handle unknown cases
-		FROM bronze.erp_cust_az12;
+		FROM bronze.CUST_AZ12;
 	    SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
@@ -194,10 +194,10 @@ BEGIN
 
         -- Loading erp_loc_a101
         SET @start_time = GETDATE();
-		PRINT '>> Truncating Table: silver.erp_loc_a101';
+		PRINT '>> Truncating Table: silver.LOC_A101';
 		TRUNCATE TABLE silver.erp_loc_a101;
-		PRINT '>> Inserting Data Into: silver.erp_loc_a101';
-		INSERT INTO silver.erp_loc_a101 (
+		PRINT '>> Inserting Data Into: silver.LOC_A101';
+		INSERT INTO silver.LOC_A101 (
 			cid,
 			cntry
 		)
@@ -209,17 +209,17 @@ BEGIN
 				WHEN TRIM(cntry) = '' OR cntry IS NULL THEN 'n/a'
 				ELSE TRIM(cntry)
 			END AS cntry -- Normalize and Handle missing or blank country codes
-		FROM bronze.erp_loc_a101;
+		FROM bronze.LOC_A101;
 	    SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
 		
 		-- Loading erp_px_cat_g1v2
 		SET @start_time = GETDATE();
-		PRINT '>> Truncating Table: silver.erp_px_cat_g1v2';
+		PRINT '>> Truncating Table: silver.PX_CAT_G1V2';
 		TRUNCATE TABLE silver.erp_px_cat_g1v2;
-		PRINT '>> Inserting Data Into: silver.erp_px_cat_g1v2';
-		INSERT INTO silver.erp_px_cat_g1v2 (
+		PRINT '>> Inserting Data Into: silver.PX_CAT_G1V2';
+		INSERT INTO silver.PX_CAT_G1V2 (
 			id,
 			cat,
 			subcat,
@@ -230,8 +230,8 @@ BEGIN
 			cat,
 			subcat,
 			maintenance
-		FROM bronze.erp_px_cat_g1v2;
-		SET @end_time = GETDATE();
+		FROM bronze.PX_CAT_G1V2
+			SET @end_time = GETDATE();
 		PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
 
